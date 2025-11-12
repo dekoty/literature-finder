@@ -24,7 +24,10 @@ func main() {
 		fmt.Print("GOOGLE_API_KEY is not set\n")
 	}
 
-	repo := persistence.NewGoogleBooksRepository(apiKey)
+	repoGoogleBooks := persistence.NewGoogleBooksRepository(apiKey)
+	repoOpenLibrary := persistence.NewOpenLibraryRepository()
+
+	repo := persistence.NewMultiRepository(repoGoogleBooks, repoOpenLibrary)
 
 	usecase := search.New(repo)
 	handler := server.NewHandler(usecase)
