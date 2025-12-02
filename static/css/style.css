@@ -1,0 +1,171 @@
+body {
+    display: flex;
+    flex-direction: column; /* Элементы идут сверху вниз */
+    align-items: center;    /* Центрирует по ГОРИЗОНТАЛИ */
+    
+    /* Элементы начинаются с самого верха, а не центрируются */
+    justify-content: flex-start; 
+    
+    min-height: 100vh;
+    margin: 0;
+
+}
+
+.logo {
+
+    margin-top: 100px; 
+    margin-bottom: 30px;
+
+    background-image: url('/static/images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 250px;
+    height: 200px;
+    pointer-events: none;
+}
+form {
+    display: flex; 
+    gap: 20px;   
+    align-items: center;
+}
+
+input[name="q"] { 
+    width: 700px;
+    height: 25px;
+    font-size: 18px; 
+    font-family: sans-serif; 
+    font-weight: 300; 
+    color: #333; 
+    
+ 
+    padding: 8px 12px; 
+    border: 1px solid #aaa; 
+    border-radius: 4px; 
+
+  
+    outline: none; 
+    
+  
+    transition: all 0.2s ease-in-out;
+}
+
+input[name="q"]:focus {
+    border-color: rgb(18, 18, 228); 
+    box-shadow: 0 0 5px rgba(18, 18, 228, 0.5); 
+}
+
+button {
+    background-color: rgb(18, 18, 228); 
+    color: white; 
+    
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    
+   
+    transition: background-color 0.5s ease-out, box-shadow 0.5s ease-out; 
+}
+
+
+button:hover {
+    background-color: rgb(75, 50, 200); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+
+}
+
+
+
+.results-separator {
+    width: 100%; /* Ширина полоски, можно настроить (например, 700px, если хотите) */
+    height: 1px; /* Высота полоски */
+    background-color: #888888; /* Светло-серый цвет */
+    margin: 40px auto; /* Отступ сверху/снизу и центрирование */
+    position: relative; /* Для позиционирования тени */
+}
+
+/* Добавляем тень для 3D-эффекта */
+.results-separator::before {
+    content: ""; /* Важно для псевдоэлементов */
+    position: absolute;
+    top: -1px; /* Сдвиг тени вверх */
+    left: 0;
+    right: 0;
+    height: 2px; /* Высота тени */
+    background: rgba(0, 0, 0, 0.3); /* Цвет тени */
+    filter: blur(1px); /* Размытие для мягкости */
+}
+
+.results-separator::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; /* Сдвиг тени вниз */
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.7); /* Светлая тень для объема */
+    filter: blur(1px);
+}
+
+.results-grid {
+    display: grid; /* Используем Grid для расположения блоков */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3 колонки, адаптивно */
+    gap: 30px; /* Отступ между блоками */
+    width: 80%; /* Ширина сетки */
+    max-width: 1200px; /* Максимальная ширина, чтобы не растягивалось слишком сильно */
+    margin: 30px auto; /* Центрируем сетку и добавляем отступы */
+}
+
+/* Стили для каждого отдельного блока книги */
+.book-item {
+    background-color: #ffffff; /* Белый фон */
+    border: 1px solid #e0e0e0; /* Легкая серая граница */
+    border-radius: 8px; /* Скругленные углы */
+    padding: 20px; /* Внутренние отступы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для объемности */
+    text-align: center; /* Центрируем текст внутри блока */
+    display: flex; /* Используем flexbox внутри блока для выравнивания содержимого */
+    flex-direction: column; /* Элементы внутри блока идут сверху вниз */
+    align-items: center; /* Центрируем элементы по горизонтали внутри блока */
+    justify-content: space-between; /* Распределяем пространство */
+    min-height: 400px; /* Минимальная высота блока для единообразия */
+}
+
+.book-item img {
+    width: 300px; /* Ограничиваем ширину обложки */
+    height: auto;
+    border-radius: 4px; /* Слегка скругленные углы для обложки */
+    margin-bottom: 15px; /* Отступ под обложкой */
+}
+
+.book-item h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+    height: 3em; /* Ограничиваем высоту заголовка */
+    overflow: hidden; /* Скрываем текст, если он выходит за пределы */
+    text-overflow: ellipsis; /* Добавляем "..." если текст длинный */
+}
+
+.book-item p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+    flex-grow: 1; /* Позволяет параграфам занимать все доступное пространство */
+    overflow: hidden; /* Скрываем переполнение */
+    text-overflow: ellipsis; /* Добавляем троеточие */
+    max-height: 5em; /* Ограничиваем описание несколькими строками */
+}
+
+.book-item a {
+    color: rgb(18, 18, 228);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px; /* Отступ сверху для ссылки */
+}
+
+.book-item a:hover {
+    text-decoration: underline;
+}

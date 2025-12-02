@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load(".env")
 
 	if err != nil {
 		fmt.Print(".env не загрузился\n")
@@ -39,7 +39,10 @@ func main() {
 		Handler: router,
 	}
 
+	router.HandleFunc("/", handler.Home)
 	router.HandleFunc("/search", handler.Search)
+
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 
 	fmt.Println("Сервер запущен на порту 8080...")
 

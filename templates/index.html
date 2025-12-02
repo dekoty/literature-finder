@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Literature finder</title>
+
+</head>
+<body>
+    <div class="logo"></div>
+
+    <form action="/search" method="get">
+        <input name="q" required>
+        <button type="submit">Поиск</button>
+    </form>
+
+    {{ if .Results }}
+        <div class="results-separator"></div>
+        <div class="results-grid"> 
+        {{ range .Results }}
+            <div class="book-item"> 
+                <img src="{{ .Thumbnail }}" width="80">
+                <h3>{{ .Title }}</h3> 
+                <p><strong>Авторы:</strong> {{ .Authors }}</p>
+                <p>{{ .Description }}</p>
+                <p><a href="{{ .Link }}" target="_blank">Подробнее</a></p> 
+            </div>
+        {{ end }}
+        </div>
+    {{ end }}
+</body>
+</html>

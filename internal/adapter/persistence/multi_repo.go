@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"literature-finder/internal/module/literature"
+	"log"
 	"sync"
 )
 
@@ -23,6 +24,7 @@ func (m *MultiRepository) Search(quary string) ([]literature.Literature, error) 
 			results, err := r.Search(quary)
 
 			if err != nil {
+				log.Printf("Ошибка при поиске в репозитории %T: %v", r, err)
 				return
 			}
 			mu.Lock()
