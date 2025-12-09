@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Мои избранные книги</title>
+</head>
+<body>
+    <header class="main-header" style="padding-bottom: 20px;">
+        <div class="logo"></div>
+        <h1 style="color: white; margin-top: -50px;">Мои избранные книги</h1>
+        <a href="/" class="favorites-link">
+            Назад
+        </a>
+
+        <form action="/clear-favorites" method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить все книги из избранного?');" style="text-align: right; margin: 10px; margin-right: 40px;">
+            <input type="hidden" name="action" value="clear_all">
+            <button type="submit" class="clear-all-btn">🗑️ Очистить весь список</button>
+        </form>
+    </header>
+
+    {{ if .Results }}
+        <div class="results-separator"></div>
+        <div class="results-grid"> 
+        {{ range .Results }}
+            <div class="book-item"> 
+                <img src="{{ .Thumbnail }}" width="170"> 
+                
+                <h3>{{ .Title }}</h3> 
+                
+                <p class="metadata"><strong>Авторы:</strong> {{ .Authors }}</p>
+                <p class="metadata"><strong>Год выпуска:</strong> {{ .Year }}</p>
+                
+                <a href="{{ .Link }}" target="_blank">Подробнее</a> 
+
+                <form action="/delete-favorite" method="POST" class="delete-form" data-book-id="{{ .ID }}">
+                    <input type="hidden" name="book_id" value="{{ .ID }}">
+                    
+                    <button type="submit" class="delete-btn">❌ Удалить</button>
+                </form>
+            </div>
+        {{ end }}
+        </div>
+    {{ else }}
+        <h2 style="text-align: center; margin-top: 50px;">У вас пока нет избранных книг.</h2>
+    {{ end }}
+</body>
+</html>

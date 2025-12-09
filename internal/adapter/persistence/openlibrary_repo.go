@@ -48,7 +48,13 @@ func (a *OpenLibraryRepository) Search(quary string) ([]literature.Literature, e
 			thumb = fmt.Sprintf("https://covers.openlibrary.org/b/id/%d-M.jpg", b.CoverI)
 		}
 
+		if thumb == "" {
+			thumb = "/static/images/upscaled-image.png"
+
+		}
+
 		book := literature.Literature{
+			ID:        b.Key,
 			Title:     b.Title,
 			Authors:   b.AuthorName,
 			Year:      fmt.Sprintf("%d", b.FirstPublishYear),

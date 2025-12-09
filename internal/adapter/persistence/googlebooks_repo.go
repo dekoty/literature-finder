@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"literature-finder/internal/module/literature"
+	"log"
 	"net/http"
 	"net/url"
 )
@@ -17,7 +18,7 @@ func NewGoogleBooksRepository(apiKey string) *GoogleBooksRepository {
 }
 
 func (a *GoogleBooksRepository) Search(quary string) ([]literature.Literature, error) {
-	urll := "https://www.googleapis.com/books/v1/volumes?q=%s&maxResults=40&projection=full&printType=books&fields=items(volumeInfo/title,volumeInfo/authors,volumeInfo/publishedDate,volumeInfo/description,volumeInfo/infoLink,volumeInfo/imageLinks/thumbnail)&key=%s"
+	urll := "https://www.googleapis.com/books/v1/volumes?q=%s&maxResults=40&projection=full&printType=books&fields=items(id,volumeInfo/title,volumeInfo/authors,volumeInfo/publishedDate,volumeInfo/description,volumeInfo/infoLink,volumeInfo/imageLinks/thumbnail)&key=%s"
 	resp, err := http.Get(fmt.Sprintf(urll, url.QueryEscape(quary), a.APIKey))
 
 	if err != nil {
@@ -45,17 +46,19 @@ func (a *GoogleBooksRepository) Search(quary string) ([]literature.Literature, e
 		if v.ImageLinks.Thumbnail != "" {
 			thumbnailURL = v.ImageLinks.Thumbnail
 		} else {
-			thumbnailURL = "/static/images/test.png"
+			thumbnailURL = "/static/images/upscaled-image.png"
 		}
 
 		book := literature.Literature{
-			Title:       v.Title,
-			Authors:     v.Authors,
-			Year:        v.PublishedDate,
-			Thumbnail:   thumbnailURL,
-			Link:        v.InfoLink,
-			Description: v.Description,
+			ID:        b.ID,
+			Title:     v.Title,
+			Authors:   v.Authors,
+			Year:      v.PublishedDate,
+			Thumbnail: thumbnailURL,
+			Link:      v.InfoLink,
 		}
+
+		log.Printf("Mapper Output: ID=%s, Title=%s", book.ID, book.Title)
 
 		results = append(results, book)
 

@@ -1,28 +1,50 @@
 body {
+    background-color: #ffffff;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    
     display: flex;
-    flex-direction: column; /* Элементы идут сверху вниз */
-    align-items: center;    /* Центрирует по ГОРИЗОНТАЛИ */
-    
-    /* Элементы начинаются с самого верха, а не центрируются */
-    justify-content: flex-start; 
-    
+    flex-direction: column; 
+ 
     min-height: 100vh;
     margin: 0;
-
 }
 
+
+
+.main-header {
+    width: 100%; 
+    padding-bottom: 50px; 
+    
+ 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+ 
+    background-image: url('/static/images/background.png'); 
+    background-size: cover;          
+    background-position: center top; 
+    background-repeat: no-repeat;
+    
+  
+   
+}
+
+
 .logo {
-
-    margin-top: 100px; 
+    margin-top: 50px; 
     margin-bottom: 30px;
-
+    
     background-image: url('/static/images/logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     width: 250px;
     height: 200px;
     pointer-events: none;
+
 }
+
 form {
     display: flex; 
     gap: 20px;   
@@ -37,15 +59,12 @@ input[name="q"] {
     font-weight: 300; 
     color: #333; 
     
- 
     padding: 8px 12px; 
     border: 1px solid #aaa; 
     border-radius: 4px; 
-
-  
+    
     outline: none; 
     
-  
     transition: all 0.2s ease-in-out;
 }
 
@@ -54,8 +73,9 @@ input[name="q"]:focus {
     box-shadow: 0 0 5px rgba(18, 18, 228, 0.5); 
 }
 
+
 button {
-    background-color: rgb(18, 18, 228); 
+    background-color: rgb(62, 62, 235); 
     color: white; 
     
     padding: 12px 20px;
@@ -65,107 +85,142 @@ button {
     font-weight: bold;
     cursor: pointer;
     
-   
     transition: background-color 0.5s ease-out, box-shadow 0.5s ease-out; 
 }
-
 
 button:hover {
     background-color: rgb(75, 50, 200); 
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
-
 }
 
 
 
 .results-separator {
-    width: 100%; /* Ширина полоски, можно настроить (например, 700px, если хотите) */
-    height: 1px; /* Высота полоски */
-    background-color: #888888; /* Светло-серый цвет */
-    margin: 40px auto; /* Отступ сверху/снизу и центрирование */
-    position: relative; /* Для позиционирования тени */
+    width: 100%;  
+    height: 1px; 
+    background-color: #bbbbbb; 
+    position: relative; 
 }
 
-/* Добавляем тень для 3D-эффекта */
 .results-separator::before {
-    content: ""; /* Важно для псевдоэлементов */
+    content: ""; 
     position: absolute;
-    top: -1px; /* Сдвиг тени вверх */
+    top: -1px; 
     left: 0;
     right: 0;
-    height: 2px; /* Высота тени */
-    background: rgba(0, 0, 0, 0.3); /* Цвет тени */
-    filter: blur(1px); /* Размытие для мягкости */
+    height: 2px; 
+    background: rgba(0, 0, 0, 0.2); 
+    filter: blur(1px); 
 }
 
 .results-separator::after {
     content: "";
     position: absolute;
-    bottom: -1px; /* Сдвиг тени вниз */
+    bottom: -1px; 
     left: 0;
     right: 0;
     height: 2px;
-    background: rgba(255, 255, 255, 0.7); /* Светлая тень для объема */
+    background: rgba(255, 255, 255, 0.7); 
     filter: blur(1px);
 }
 
+
 .results-grid {
-    display: grid; /* Используем Grid для расположения блоков */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3 колонки, адаптивно */
-    gap: 30px; /* Отступ между блоками */
-    width: 80%; /* Ширина сетки */
-    max-width: 1200px; /* Максимальная ширина, чтобы не растягивалось слишком сильно */
-    margin: 30px auto; /* Центрируем сетку и добавляем отступы */
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 30px; 
+    width: 90%; 
+    max-width: 1200px; 
+    margin: 30px auto; 
 }
 
-/* Стили для каждого отдельного блока книги */
+
+
 .book-item {
-    background-color: #ffffff; /* Белый фон */
-    border: 1px solid #e0e0e0; /* Легкая серая граница */
-    border-radius: 8px; /* Скругленные углы */
-    padding: 20px; /* Внутренние отступы */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для объемности */
-    text-align: center; /* Центрируем текст внутри блока */
-    display: flex; /* Используем flexbox внутри блока для выравнивания содержимого */
-    flex-direction: column; /* Элементы внутри блока идут сверху вниз */
-    align-items: center; /* Центрируем элементы по горизонтали внутри блока */
-    justify-content: space-between; /* Распределяем пространство */
-    min-height: 400px; /* Минимальная высота блока для единообразия */
+    background-color: #ffffff; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    padding: 20px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+    text-align: center; 
+    
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+
+    justify-content: space-between; 
+    min-height: 400px; 
 }
+
 
 .book-item img {
-    width: 300px; /* Ограничиваем ширину обложки */
+    width: 170px; 
     height: auto;
-    border-radius: 4px; /* Слегка скругленные углы для обложки */
-    margin-bottom: 15px; /* Отступ под обложкой */
+    border-radius: 4px; 
+    margin-bottom: 15px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
 .book-item h3 {
     font-size: 1.2em;
     color: #333;
-    margin-bottom: 10px;
-    height: 3em; /* Ограничиваем высоту заголовка */
-    overflow: hidden; /* Скрываем текст, если он выходит за пределы */
-    text-overflow: ellipsis; /* Добавляем "..." если текст длинный */
+
+    height: auto; 
+    overflow: visible; 
+    white-space: normal; 
+    
+  
+    flex-shrink: 0; 
+    margin: 10px 0 5px 0; 
 }
 
-.book-item p {
+
+.book-item p.metadata {
     font-size: 0.9em;
     color: #666;
-    margin-bottom: 10px;
-    flex-grow: 1; /* Позволяет параграфам занимать все доступное пространство */
-    overflow: hidden; /* Скрываем переполнение */
-    text-overflow: ellipsis; /* Добавляем троеточие */
-    max-height: 5em; /* Ограничиваем описание несколькими строками */
+    margin-bottom: 5px;
+    flex-shrink: 0; 
+    flex-grow: 0;
+    width: 100%;
 }
+
 
 .book-item a {
     color: rgb(18, 18, 228);
     text-decoration: none;
     font-weight: bold;
-    margin-top: 10px; /* Отступ сверху для ссылки */
+    margin-top: 10px; 
+    
+
+    flex-shrink: 0; 
 }
 
 .book-item a:hover {
     text-decoration: underline;
 }
+
+.favorites-link {
+    /* Чтобы ссылка располагалась справа от логотипа */
+    margin-top: 10px;
+    margin-right: 40px;
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    text-decoration: none; /* Убираем подчеркивание */
+    color: #333;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.favorites-link:hover {
+    background-color: #e0e0e0;
+}
+
+/* На случай, если вы хотите расположить его справа от поиска, используйте Flexbox для .main-header */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Распределяет элементы по ширине */
+}
+
+

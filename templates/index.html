@@ -7,26 +7,53 @@
 
 </head>
 <body>
-    <div class="logo"></div>
 
-    <form action="/search" method="get">
-        <input name="q" required>
-        <button type="submit">Поиск</button>
-    </form>
+
+
+    <header class="main-header">
+        <div class="logo"></div>
+
+        <form action="/search" method="get">
+            <input name="q" required>
+            <button type="submit">Поиск</button>
+        </form>
+
+    <a href="/favorites" class="favorites-link">
+            Моя библиотека
+    </a>
+
+     
+
+    </header>
 
     {{ if .Results }}
         <div class="results-separator"></div>
         <div class="results-grid"> 
         {{ range .Results }}
             <div class="book-item"> 
-                <img src="{{ .Thumbnail }}" width="80">
+                <img src="{{ .Thumbnail }}" width="170"> 
+                
                 <h3>{{ .Title }}</h3> 
-                <p><strong>Авторы:</strong> {{ .Authors }}</p>
-                <p>{{ .Description }}</p>
-                <p><a href="{{ .Link }}" target="_blank">Подробнее</a></p> 
+                
+                <p class="metadata"><strong>Авторы:</strong> {{ .Authors }}</p>
+                <p class="metadata"><strong>Год выпуска:</strong> {{ .Year }}</p>
+                
+                <a href="{{ .Link }}" target="_blank">Подробнее</a> 
+                
+                <form action="/save-favorite" method="POST" class="favorite-form" data-book-id="{{ .ID }}">
+                    <input type="hidden" name="book_id" value="{{ .ID }}">
+                    <input type="hidden" name="title" value="{{ .Title }}">
+                    <input type="hidden" name="authors" value="{{ join .Authors "; " }}"> 
+                    <input type="hidden" name="thumbnail" value="{{ .Thumbnail }}">
+                    <input type="hidden" name="link" value="{{ .Link }}">
+                    <input type="hidden" name="year" value="{{ .Year }}">
+                    
+                    <button type="submit" class="favorite-btn">⭐ В избранное</button>
+                </form>
             </div>
         {{ end }}
         </div>
     {{ end }}
+    <script src="/static/js/app.js"></script>
 </body>
 </html>
