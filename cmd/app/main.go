@@ -1,75 +1,59 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"literature-finder/internal/adapter/persistence"
 	"literature-finder/internal/adapter/server"
+	"literature-finder/internal/config"
 	"literature-finder/internal/usecase/search"
+	"literature-finder/pkg/database"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
 )
 
 func main() {
 
-	err := godotenv.Load(".env")
-
+	cfg, err := config.Load()
 	if err != nil {
-		fmt.Print(".env не загрузился\n")
+		log.Fatal("Ошибка инициализации конфигурации: ", err)
 	}
 
-	apiKey := os.Getenv("API_KEY")
-	if apiKey == "" {
-		fmt.Print("GOOGLE_API_KEY is not set\n")
-	}
-
-	dbKey, err := sql.Open("postgres", os.Getenv("DATASOURCENAME"))
-
+	dbKey, err := database.NewPostgresDB(cfg.DatabaseURL)
 	if err != nil {
-		log.Fatal("Ошибка открытия соединения с базой данных: ", err)
+		log.Fatal("Ошибка подключения к БД: ", err)
 	}
 
-	if err := dbKey.Ping(); err != nil {
-
-		log.Fatalf("Ошибка при пинге базы данных: %v", err)
-	}
+	defer dbKey.Close()
 
 	dbRepo := persistence.NewPostgresRepository(dbKey)
 
-	repoGoogleBooks := persistence.NewGoogleBooksRepository(apiKey)
+	repoGoogleBooks := persistence.NewGoogleBooksRepository(cfg.APIKey)
 	repoOpenLibrary := persistence.NewOpenLibraryRepository()
 
 	repo := persistence.NewMultiRepository(repoGoogleBooks, repoOpenLibrary)
-
 	usecase := search.New(repo)
 	handler := server.NewHandler(dbRepo, usecase)
 
 	router := mux.NewRouter()
 
-	server := http.Server{
-		Addr:    ":8080",
-		Handler: router,
-	}
-
-	router.HandleFunc("/", handler.Home)
-	router.HandleFunc("/search", handler.Search)
-	router.HandleFunc("/favorites", handler.FavoritesPageHandler)
-	router.HandleFunc("/save-favorite", handler.SaveFavoriteHandler)
-	router.HandleFunc("/delete-favorite", handler.DeleteFavoriteHandler)
-	router.HandleFunc("/clear-favorites", handler.ClearFavoritesHandler)
+	router.HandleFunc("/", handler.Home).Methods("GET")
+	router.HandleFunc("/search", handler.Search).Methods("GET")
+	router.HandleFunc("/favorites", handler.FavoritesPageHandler).Methods("GET")
+	router.HandleFunc("/save-favorite", handler.SaveFavoriteHandler).Methods("POST")
+	router.HandleFunc("/delete-favorite", handler.DeleteFavoriteHandler).Methods("POST")
+	router.HandleFunc("/clear-favorites", handler.ClearFavoritesHandler).Methods("POST")
 
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 
-	fmt.Println("Сервер запущен на порту 8080...")
-
-	if err := server.ListenAndServe(); err != nil {
-		fmt.Printf("Error %s\n", err)
-
+	srv := &http.Server{
+		Addr:    cfg.ServerAddress,
+		Handler: router,
 	}
 
+	log.Printf("Сервер запущен на порту %s (http://localhost%s)", cfg.ServerAddress, cfg.ServerAddress)
+
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Ошибка запуска сервера: %v", err)
+	}
 }

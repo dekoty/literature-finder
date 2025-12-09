@@ -29,15 +29,19 @@ func (a *OpenLibraryRepository) Search(quary string) ([]literature.Literature, e
 	resp, err := http.Get(fmt.Sprintf(urll, url.QueryEscape(quary)))
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка сетевого запроса к Open Library: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("open Library API вернул ошибку: статус %d", resp.StatusCode)
 	}
 
 	var apiResp openLibraryResponse
 
 	err = json.NewDecoder(resp.Body).Decode(&apiResp)
-
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка декодирования JSON от Open Library: %w", err)
 	}
 
 	var results []literature.Literature
@@ -50,7 +54,6 @@ func (a *OpenLibraryRepository) Search(quary string) ([]literature.Literature, e
 
 		if thumb == "" {
 			thumb = "/static/images/upscaled-image.png"
-
 		}
 
 		book := literature.Literature{
@@ -63,9 +66,7 @@ func (a *OpenLibraryRepository) Search(quary string) ([]literature.Literature, e
 		}
 
 		results = append(results, book)
-
 	}
 
 	return results, nil
-
 }

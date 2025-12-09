@@ -1,6 +1,9 @@
 package search
 
-import "literature-finder/internal/module/literature"
+import (
+	"fmt"
+	"literature-finder/internal/module/literature"
+)
 
 type UseCase struct {
 	repo literature.Repository
@@ -11,6 +14,10 @@ func New(repo literature.Repository) *UseCase {
 }
 
 func (uc *UseCase) SearchLiterature(query string) ([]literature.Literature, error) {
+	results, err := uc.repo.Search(query)
+	if err != nil {
 
-	return uc.repo.Search(query)
+		return nil, fmt.Errorf("ошибка бизнес-логики при поиске по запросу '%s': %w", query, err)
+	}
+	return results, nil
 }

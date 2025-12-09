@@ -46,7 +46,11 @@ func (r *PostgresRepository) SaveBook(userID string, book literature.Literature)
 		book.Year,
 	)
 
-	return err
+	if err != nil {
+		return fmt.Errorf("ошибка при сохранении книги (ID: %s) для пользователя %s: %w", book.ID, userID, err)
+	}
+
+	return nil
 }
 
 func (r *PostgresRepository) GetBooksByUserID(userID string, status string) ([]literature.Literature, error) {
@@ -54,9 +58,10 @@ func (r *PostgresRepository) GetBooksByUserID(userID string, status string) ([]l
 			  FROM user_books
 			  WHERE user_id = $1 AND status = $2
 			  ORDER BY created_at DESC`
+
 	rows, err := r.DB.Query(query, userID, status)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка выполнения запроса GetBooksByUserID для пользователя %s: %w", userID, err)
 	}
 	defer rows.Close()
 
@@ -76,7 +81,8 @@ func (r *PostgresRepository) GetBooksByUserID(userID string, status string) ([]l
 		)
 
 		if err != nil {
-			return nil, err
+			log.Printf("Внимание: ошибка сканирования строки БД для пользователя %s: %v", userID, err)
+			return nil, fmt.Errorf("ошибка чтения данных из БД: %w", err)
 		}
 
 		book := literature.Literature{
@@ -92,7 +98,7 @@ func (r *PostgresRepository) GetBooksByUserID(userID string, status string) ([]l
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка при итерации строк таблицы user_books: %w", err)
 	}
 
 	return books, nil
@@ -104,11 +110,18 @@ func (r *PostgresRepository) DeleteBook(userID string, bookID string) error {
         WHERE user_id = $1 AND book_id = $2;
     `
 
-	_, err := r.DB.Exec(query, userID, bookID)
+	result, err := r.DB.Exec(query, userID, bookID)
 	if err != nil {
-		return fmt.Errorf("ошибка удаления книги %s для пользователя %s: %w", bookID, userID, err)
+		return fmt.Errorf("ошибка выполнения запроса удаления книги %s: %w", bookID, err)
 	}
-	log.Printf("Книга %s успешно удалена для пользователя %s", bookID, userID)
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		log.Printf("Попытка удалить несуществующую книгу %s у пользователя %s", bookID, userID)
+	} else {
+		log.Printf("Книга %s успешно удалена для пользователя %s", bookID, userID)
+	}
+
 	return nil
 }
 

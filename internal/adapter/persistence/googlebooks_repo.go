@@ -22,20 +22,19 @@ func (a *GoogleBooksRepository) Search(quary string) ([]literature.Literature, e
 	resp, err := http.Get(fmt.Sprintf(urll, url.QueryEscape(quary), a.APIKey))
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка сетевого запроса к Google Books: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("google Books API returned status %d. Check your API key or request limits", resp.StatusCode)
+		return nil, fmt.Errorf("google Books API вернул статус %d. Проверьте API ключ или лимиты", resp.StatusCode)
 	}
 
 	var apiResp googleBooksResponse
 
 	err = json.NewDecoder(resp.Body).Decode(&apiResp)
-
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ошибка декодирования JSON от Google Books: %w", err)
 	}
 
 	var results []literature.Literature
@@ -61,7 +60,6 @@ func (a *GoogleBooksRepository) Search(quary string) ([]literature.Literature, e
 		log.Printf("Mapper Output: ID=%s, Title=%s", book.ID, book.Title)
 
 		results = append(results, book)
-
 	}
 
 	return results, nil
