@@ -9,8 +9,6 @@ import (
 
 const UserCookieName = "user_uuid"
 
-// GetUserID извлекает UUID из куки пользователя или генерирует новый,
-// если кука не найдена или недействительна. Новый UUID устанавливается в HTTP-ответ.
 func GetUserID(w http.ResponseWriter, r *http.Request) string {
 	cookie, err := r.Cookie(UserCookieName)
 
@@ -20,7 +18,6 @@ func GetUserID(w http.ResponseWriter, r *http.Request) string {
 
 	newUUID := uuid.New().String()
 
-	// Создаем новую куку
 	newCookie := &http.Cookie{
 		Name:     UserCookieName,
 		Value:    newUUID,

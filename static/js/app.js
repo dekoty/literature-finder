@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Находим все формы "Избранное"
+    // Находим все формы "Избранное"
     const favoriteForms = document.querySelectorAll('.favorite-form');
 
     favoriteForms.forEach(form => {
@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formButton.textContent = '...Сохранение';
             const dataToSend = new URLSearchParams(formData);
             try {
-                // 3. Отправляем асинхронный POST-запрос на наш Go-хендлер
+                // Отправляем асинхронный POST-запрос на наш Go-хендлер
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: dataToSend, // Отправляем данные формы
                 });
 
-                // 4. Проверяем HTTP-статус ответа
+                // Проверяем HTTP-статус ответа
                 if (response.ok) {
                     // Успех (статус 201 Created)
                     const result = await response.json();
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Произошла сетевая ошибка.');
 
             } finally {
-                // 5. В любом случае разблокируем кнопку через некоторое время
+                // В любом случае разблокируем кнопку через некоторое время
                 setTimeout(() => {
                     formButton.disabled = false;
                     // Если не было успеха, возвращаем исходный текст, чтобы можно было попробовать снова
